@@ -77,6 +77,7 @@ stages:
   jobs:
   - deployment: Deploy
     pool: default
+    environment: dev
     variables:
     - group: Release
     strategy:
