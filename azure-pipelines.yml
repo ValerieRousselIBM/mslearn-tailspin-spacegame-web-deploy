@@ -1,10 +1,7 @@
 trigger:
 - '*'
 
-pool:
-  vmImage: 'ubuntu-20.04'
-  demands:
-  - npm
+pool: default
 
 variables:
   buildConfiguration: 'Release'
@@ -24,6 +21,9 @@ steps:
 
 - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
   displayName: 'Compile Sass assets'
+
+- script: 'npm install gulp-cli'
+  displayName: 'Install gulp'
 
 - task: gulp@1
   displayName: 'Run gulp tasks'
