@@ -18,6 +18,10 @@ stages:
       dotnetSdkVersion: '6.x'
 
     steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '16.x'
+        
     - task: UseDotNet@2
       displayName: 'Use .NET SDK $(dotnetSdkVersion)'
       inputs:
@@ -30,6 +34,9 @@ stages:
 
     - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
       displayName: 'Compile Sass assets'
+
+    - script: 'npm install --global gulp-cli'
+      displayName: 'Install gulp'
 
     - task: gulp@1
       displayName: 'Run gulp tasks'
