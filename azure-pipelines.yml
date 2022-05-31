@@ -22,6 +22,11 @@ stages:
         versionSpec: '16.x'
         
     - task: UseDotNet@2
+      displayName: 'Use .NET SDK 5.x'
+      inputs:
+        version: '5.x'
+
+    - task: UseDotNet@2
       displayName: 'Use .NET SDK $(dotnetSdkVersion)'
       inputs:
         version: '$(dotnetSdkVersion)'
@@ -120,9 +125,9 @@ stages:
     - group: 'Release'
     steps: 
     - task: UseDotNet@2
-      displayName: 'Use .NET SDK $(dotnetSdkVersion)'
+      displayName: 'Use .NET SDK 5.x'
       inputs:
-        version: '$(dotnetSdkVersion)'
+        version: '5.x'
     - task: DotNetCoreCLI@2
       displayName: 'Build the project - $(buildConfiguration)'
       inputs:
