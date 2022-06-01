@@ -11,21 +11,16 @@ stages:
   jobs: 
   - job: 'Build'
     displayName: 'Build job'
-    pool: default
+    pool:
+      vmImage: 'ubuntu-20.04'
+      demands:
+      - npm
 
     variables:
       wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
+      dotnetSdkVersion: '5.x'
 
     steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '16.x'
-        
-    - task: UseDotNet@2
-      displayName: 'Use .NET SDK 5.x'
-      inputs:
-        version: '5.x'
-
     - task: UseDotNet@2
       displayName: 'Use .NET SDK $(dotnetSdkVersion)'
       inputs:
@@ -38,9 +33,6 @@ stages:
 
     - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
       displayName: 'Compile Sass assets'
-    
-    - script: 'npm install --global gulp-cli'
-      displayName: 'Install gulp'
 
     - task: gulp@1
       displayName: 'Run gulp tasks'
@@ -79,7 +71,8 @@ stages:
   dependsOn: Build
   jobs:
   - deployment: Deploy
-    pool: default
+    pool:
+      vmImage: 'ubuntu-20.04'
     environment: dev
     variables:
     - group: Release
@@ -101,7 +94,8 @@ stages:
   dependsOn: Dev
   jobs:
   - deployment: Deploy
-    pool: default
+    pool:
+      vmImage: 'ubuntu-20.04'
     environment: test
     variables:
     - group: 'Release'
@@ -120,14 +114,15 @@ stages:
   - job: RunUITests
     dependsOn: Deploy
     displayName: 'Run UI tests'
-    pool: default
+    pool:
+      vmImage: 'windows-2019'
     variables:
     - group: 'Release'
     steps: 
     - task: UseDotNet@2
-      displayName: 'Use .NET SDK 5.x'
+      displayName: 'Use .NET SDK $(dotnetSdkVersion)'
       inputs:
-        version: '5.x'
+        version: '$(dotnetSdkVersion)'
     - task: DotNetCoreCLI@2
       displayName: 'Build the project - $(buildConfiguration)'
       inputs:
@@ -147,7 +142,8 @@ stages:
   dependsOn: Test
   jobs:
   - deployment: Deploy
-    pool: default
+    pool:
+      vmImage: 'ubuntu-20.04'
     environment: staging
     variables:
     - group: 'Release'
